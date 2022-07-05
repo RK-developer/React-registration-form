@@ -5,6 +5,22 @@ import {
     CustomSelectbox,
 } from "../CustomValidation";
 import { countryList } from "../../data/countryList";
+import Modal from "../Modal";
+
+const RegModalBodyContent = ({registrationState}) => {
+    return (
+        <div>
+            <p>Form Submitted Successfully</p>
+            {
+                registrationState
+                &&
+                <ul>
+                {Object.keys(registrationState)?.map(fields => (<li>{fields} : {registrationState[fields]?.value || ""}</li>))}
+                </ul>
+            }
+        </div>
+    )
+}
 
 const RegistrationForm = (props) => {
     const [registrationState, setRegistrationState] = useState({});
@@ -13,6 +29,7 @@ const RegistrationForm = (props) => {
     const [currentCityList, setCurrentCityList] = useState(null);
     const [saveBtnIsDisabled, setSaveBtnIsDisabled] = useState(true);
     const [isReset, setIsReset] = useState(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
     useEffect(() => {
         const isError =
@@ -83,8 +100,14 @@ const RegistrationForm = (props) => {
         setIsReset(true);
     };
 
+    const registrationOnSubmit = (event) => {
+        event.preventDefault();
+        setIsFormSubmitted(true);
+    }
+
     return (
-        <form className="registration-form">
+        <>
+             <form className="registration-form" onSubmit={registrationOnSubmit}>
             <h4>Registration</h4>
             <div className="form-container">
                 {/**Name */}
@@ -195,6 +218,21 @@ const RegistrationForm = (props) => {
                 </button>
             </div>
         </form>
+
+        {
+            isFormSubmitted
+            &&
+            <Modal
+            isFormSubmitted = {isFormSubmitted}
+            title = "Registration Completed"
+            isCancel = {false}
+            okText = "Ok"
+            bodyContent = { <RegModalBodyContent registrationState={registrationState} />}
+            closeHandler = {() => setIsFormSubmitted(false)}
+            />
+        }
+        </>
+       
     );
 };
 
