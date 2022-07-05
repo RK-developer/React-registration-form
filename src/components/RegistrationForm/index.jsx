@@ -15,50 +15,54 @@ const RegistrationForm = (props) => {
     const [isReset, setIsReset] = useState(false);
 
     useEffect(() => {
-        const isError = (!registrationState?.name?.value || !registrationState?.email?.value || registrationState?.email?.hasEmailError);
-        if(isError) {
+        const isError =
+            !registrationState?.name?.value ||
+            !registrationState?.email?.value ||
+            registrationState?.email?.hasEmailError;
+        if (isError) {
             setSaveBtnIsDisabled(true);
         } else {
             setSaveBtnIsDisabled(false);
         }
-    },[registrationState.name,registrationState.email]);
+    }, [registrationState.name, registrationState.email]);
 
     useEffect(() => {
-        if(registrationState.country?.value) {
+        if (registrationState.country?.value) {
             setCurrentStateList(
                 getCurrentState(registrationState.country?.value)
             );
         }
-    },[registrationState.country]);
+    }, [registrationState.country]);
 
     useEffect(() => {
-        if(registrationState.state?.value) {
-            setCurrentCityList(
-                getCurrentCity(registrationState.state?.value)
-            );
+        if (registrationState.state?.value) {
+            setCurrentCityList(getCurrentCity(registrationState.state?.value));
         }
-    },[registrationState.state]);
+    }, [registrationState.state]);
 
-    const onChangeHandler = useCallback(
-        (targetValue, event) => {
-            setIsReset(false);
-            setRegistrationState((prevState) => {
-                const newState = {
-                    ...prevState,
-                    [event.target.name]: targetValue,
-                }
-                if(event.target.name === 'country' && prevState?.country?.value !== targetValue?.value) {
-                    newState["state"] = ""; 
-                    newState["city"] = "";
-                }
-                if(event.target.name === 'mobile') {
-                    newState["mobile"]["value"] = event.target.value.replace(/\D/,"");
-                }
-               return newState;
-            })
-        },
-        []
-    );
+    const onChangeHandler = useCallback((targetValue, event) => {
+        setIsReset(false);
+        setRegistrationState((prevState) => {
+            const newState = {
+                ...prevState,
+                [event.target.name]: targetValue,
+            };
+            if (
+                event.target.name === "country" &&
+                prevState?.country?.value !== targetValue?.value
+            ) {
+                newState["state"] = "";
+                newState["city"] = "";
+            }
+            if (event.target.name === "mobile") {
+                newState["mobile"]["value"] = event.target.value.replace(
+                    /\D/,
+                    ""
+                );
+            }
+            return newState;
+        });
+    }, []);
 
     const getCurrentState = (currentCountryValue) => {
         return countryList.filter(
@@ -77,7 +81,7 @@ const RegistrationForm = (props) => {
         setCurrentCityList(null);
         setSaveBtnIsDisabled(true);
         setIsReset(true);
-    }
+    };
 
     return (
         <form className="registration-form">
@@ -91,7 +95,7 @@ const RegistrationForm = (props) => {
                     label={"Name"}
                     name={"name"}
                     onChange={onChangeHandler}
-                    isReset = {isReset}
+                    isReset={isReset}
                     validation={{
                         empty: {
                             message: "This Filed is required",
@@ -105,7 +109,7 @@ const RegistrationForm = (props) => {
                     placeholder={"Enter Email"}
                     label={"Email"}
                     name={"email"}
-                    isReset = {isReset}
+                    isReset={isReset}
                     onChange={onChangeHandler}
                     validation={{
                         empty: {
@@ -123,7 +127,7 @@ const RegistrationForm = (props) => {
                     placeholder={"Enter Mobile Number"}
                     label={"Mobile"}
                     name={"mobile"}
-                    isReset = {isReset}
+                    isReset={isReset}
                     onChange={onChangeHandler}
                     maxLength="10"
                 />
@@ -135,7 +139,7 @@ const RegistrationForm = (props) => {
                     label={"Country"}
                     name={"country"}
                     option={countryList}
-                    isReset = {isReset}
+                    isReset={isReset}
                     onChange={onChangeHandler}
                 />
                 {/**Country */}
@@ -145,7 +149,7 @@ const RegistrationForm = (props) => {
                     value={registrationState.state?.value}
                     label={"State"}
                     name={"state"}
-                    isReset = {isReset}
+                    isReset={isReset}
                     disabled={registrationState.country?.value ? false : true}
                     option={
                         registrationState.country?.value && currentStateList
@@ -159,10 +163,8 @@ const RegistrationForm = (props) => {
                     value={registrationState.city?.value}
                     label={"City"}
                     name={"city"}
-                    isReset = {isReset}
-                    option={
-                        registrationState.state?.value && currentCityList
-                    }
+                    isReset={isReset}
+                    option={registrationState.state?.value && currentCityList}
                     disabled={registrationState.state?.value ? false : true}
                     onChange={onChangeHandler}
                 />
@@ -172,13 +174,25 @@ const RegistrationForm = (props) => {
                     placeholder={"Enter Message"}
                     label={"Message"}
                     name={"message"}
-                    isReset = {isReset}
+                    isReset={isReset}
                     onChange={onChangeHandler}
                 />
             </div>
             <div className="form-footer">
-                <button type="submit" className="btn btn-primary reg-save" disabled={saveBtnIsDisabled}>Save</button>
-                <button type="button" className="btn btn-outline-secondary reg-reset" onClick={resetForm}>Reset</button>
+                <button
+                    type="submit"
+                    className="btn btn-primary reg-save"
+                    disabled={saveBtnIsDisabled}
+                >
+                    Save
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-outline-secondary reg-reset"
+                    onClick={resetForm}
+                >
+                    Reset
+                </button>
             </div>
         </form>
     );
