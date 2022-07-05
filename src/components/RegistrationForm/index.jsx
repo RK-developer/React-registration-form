@@ -7,14 +7,21 @@ import {
 import { countryList } from "../../data/countryList";
 
 const RegistrationForm = (props) => {
-    const [registrationState, setRegistrationState] = useState({
-        name: {},
-        email: {},
-        message: {},
-    });
+    const [registrationState, setRegistrationState] = useState({});
 
     const [currentStateList, setCurrentStateList] = useState(null);
     const [currentCityList, setCurrentCityList] = useState(null);
+    const [saveBtnIsDisabled, setSaveBtnIsDisabled] = useState(true);
+    const [isReset, setIsReset] = useState(false);
+
+    useEffect(() => {
+        const isError = (!registrationState?.name?.value || !registrationState?.email?.value || registrationState?.email?.hasEmailError);
+        if(isError) {
+            setSaveBtnIsDisabled(true);
+        } else {
+            setSaveBtnIsDisabled(false);
+        }
+    },[registrationState.name,registrationState.email]);
 
     useEffect(() => {
         if(registrationState.country?.value) {
@@ -33,7 +40,8 @@ const RegistrationForm = (props) => {
     },[registrationState.state]);
 
     const onChangeHandler = useCallback(
-        (targetValue, event) =>
+        (targetValue, event) => {
+            setIsReset(false);
             setRegistrationState((prevState) => {
                 const newState = {
                     ...prevState,
@@ -43,8 +51,12 @@ const RegistrationForm = (props) => {
                     newState["state"] = ""; 
                     newState["city"] = "";
                 }
+                if(event.target.name === 'mobile') {
+                    newState["mobile"]["value"] = event.target.value.replace(/\D/,"");
+                }
                return newState;
-            }),
+            })
+        },
         []
     );
 
@@ -59,6 +71,14 @@ const RegistrationForm = (props) => {
         )?.[0]?.city;
     };
 
+    const resetForm = () => {
+        setRegistrationState({});
+        setCurrentStateList(null);
+        setCurrentCityList(null);
+        setSaveBtnIsDisabled(true);
+        setIsReset(true);
+    }
+
     return (
         <form className="registration-form">
             <h4>Registration</h4>
@@ -71,6 +91,7 @@ const RegistrationForm = (props) => {
                     label={"Name"}
                     name={"name"}
                     onChange={onChangeHandler}
+                    isReset = {isReset}
                     validation={{
                         empty: {
                             message: "This Filed is required",
@@ -84,6 +105,7 @@ const RegistrationForm = (props) => {
                     placeholder={"Enter Email"}
                     label={"Email"}
                     name={"email"}
+                    isReset = {isReset}
                     onChange={onChangeHandler}
                     validation={{
                         empty: {
@@ -101,7 +123,9 @@ const RegistrationForm = (props) => {
                     placeholder={"Enter Mobile Number"}
                     label={"Mobile"}
                     name={"mobile"}
+                    isReset = {isReset}
                     onChange={onChangeHandler}
+                    maxLength="10"
                 />
                 {/**Country */}
                 <CustomSelectbox
@@ -111,6 +135,7 @@ const RegistrationForm = (props) => {
                     label={"Country"}
                     name={"country"}
                     option={countryList}
+                    isReset = {isReset}
                     onChange={onChangeHandler}
                 />
                 {/**Country */}
@@ -120,6 +145,7 @@ const RegistrationForm = (props) => {
                     value={registrationState.state?.value}
                     label={"State"}
                     name={"state"}
+                    isReset = {isReset}
                     disabled={registrationState.country?.value ? false : true}
                     option={
                         registrationState.country?.value && currentStateList
@@ -133,6 +159,7 @@ const RegistrationForm = (props) => {
                     value={registrationState.city?.value}
                     label={"City"}
                     name={"city"}
+                    isReset = {isReset}
                     option={
                         registrationState.state?.value && currentCityList
                     }
@@ -145,12 +172,13 @@ const RegistrationForm = (props) => {
                     placeholder={"Enter Message"}
                     label={"Message"}
                     name={"message"}
+                    isReset = {isReset}
                     onChange={onChangeHandler}
                 />
             </div>
             <div className="form-footer">
-                <button type="button" className="btn btn-primary reg-save">Save</button>
-                <button type="button" className="btn btn-outline-secondary reg-reset">Reset</button>
+                <button type="submit" className="btn btn-primary reg-save" disabled={saveBtnIsDisabled}>Save</button>
+                <button type="button" className="btn btn-outline-secondary reg-reset" onClick={resetForm}>Reset</button>
             </div>
         </form>
     );

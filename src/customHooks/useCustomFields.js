@@ -1,9 +1,14 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {notAllowedFirstCharAsSpecial, isEmptyCheck, isEmailCheck} from "../utils/formValidations/validation";
 const useCustomFields = props => {
-    const {onChange, value:currentValue, validation} = props;
+    const {onChange, value:currentValue, validation, isReset} = props;
     const hasValidation = validation && Object.keys(validation).length > 0;
     const [filedCurrentVal, setFieldCurrentVal] = useState({});
+    useEffect(() => {
+        if(isReset) {
+            setFieldCurrentVal({}); 
+        }
+    },[isReset])
     const onChangeHandler = (event) => {
         const value = notAllowedFirstCharAsSpecial(event.target.value);
         const targetValue = {

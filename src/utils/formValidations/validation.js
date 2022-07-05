@@ -1,11 +1,12 @@
 export const notAllowedFirstCharAsSpecial = (value) => {
-    const pattern = /^[%=+-@]/;
+    const pattern = /^[%=+-]/;
+    const patternAt = /@/;
     const trimedValue = value?.toString()?.trim();
     if(!trimedValue || trimedValue.length <=0) {
         return trimedValue;
     }
 
-    if(pattern.test(trimedValue[0])) {
+    if(pattern.test(trimedValue[0]) || patternAt.test(trimedValue[0])) {
         return trimedValue.substring(1);
     }
     return value

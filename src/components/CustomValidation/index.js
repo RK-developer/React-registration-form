@@ -26,6 +26,12 @@ const ErrorWrapper = ({
     )
 }
 
+const RequiredSymbol = ({validation}) => {
+    return (
+        Object.keys(validation).length > 0 && <span className="required-symbol">*</span>
+    )
+}
+
 export const CustomInput = ({
     type = "text",
     value = "",
@@ -33,13 +39,17 @@ export const CustomInput = ({
     label = "custom-input",
     name = "custom-input",
     validation = {},
+    isReset = false,
     onChange = () => {},
     ...props
 }) => {
-    const [onChangeHandler,onFormatValue,filedCurrentVal] = useCustomFields({onChange,value,validation})
+    const [onChangeHandler,onFormatValue,filedCurrentVal] = useCustomFields({onChange,value,validation, isReset})
     return (
         <div className="form-field-group mb-3">
-            {label && <label htmlFor="custom-input" className="form-label">{label}</label>}
+            {label && <label htmlFor="custom-input" className="form-label">
+            <RequiredSymbol validation={validation}/>
+            {label}
+            </label>}
             <input 
             type={type} 
             value={onFormatValue()} 
@@ -63,13 +73,17 @@ export const CustomTextarea = ({
     label = "custom-textarea",
     name = "custom-textarea",
     validation = {},
+    isReset = false,
     onChange = () => {},
     ...props
 }) => {
-    const [onChangeHandler,onFormatValue,filedCurrentVal] = useCustomFields({onChange,value,validation})
+    const [onChangeHandler,onFormatValue,filedCurrentVal] = useCustomFields({onChange,value,validation, isReset})
     return (
         <div className="form-field-group mb-3">
-            {label && <label htmlFor="custom-textarea" className="form-label">{label}</label>}
+            {label && <label htmlFor="custom-textarea" className="form-label">
+            <RequiredSymbol validation={validation}/>
+            {label}
+            </label>}
             <textarea
             value={onFormatValue()} 
             name={name || ""} 
@@ -91,15 +105,19 @@ export const CustomSelectbox = ({
     placeholder = enterText,
     label = "custom-selectbox",
     name = "custom-selectbox",
+    isReset = false,
     option = [],
     validation = {},
     onChange = () => {},
     ...props
 }) => {
-    const [onChangeHandler,onFormatValue,filedCurrentVal] = useCustomFields({onChange,value,validation})
+    const [onChangeHandler,onFormatValue,filedCurrentVal] = useCustomFields({onChange,value,validation, isReset})
     return (
         <div className="form-field-group mb-3">
-            {label && <label htmlFor="custom-selectbox" className="form-label">{label}</label>}
+            {label && <label htmlFor="custom-selectbox" className="form-label">
+            <RequiredSymbol validation={validation}/>
+            {label}
+            </label>}
             <select
             name={name}
             value={value ? onFormatValue() : '1'}

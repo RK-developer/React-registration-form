@@ -1,19 +1,19 @@
 .page-header {
-    margin: 0px;
     background-color: #337fb1;
     color: #fff;
-    padding: 20px;
 }
-.page-header>h3 {
+.page-header,
+.page-header>h3,
+.registration-form h4 {
     margin:0px;
 }
+.page-header,
 .registration-form h4,
 .registration-form .form-container ,
 .registration-form .form-footer {
     padding: 20px;
 }
 .registration-form h4 {
-    margin: 0px;
     border-bottom: 1px solid #eee;
 }
 .registration-form {
@@ -38,8 +38,15 @@
 .reg-save {
     margin-right: 10px;
 }
+.error-wrapper p,
+.required-symbol {
+    color: red;
+}
 .error-wrapper p {
     margin: 0px;
     font-size: 13px;
-    color: red;
+}
+.required-symbol {
+    vertical-align: text-bottom;
+    font-weight: 500;
 }
